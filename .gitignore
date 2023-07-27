@@ -1,0 +1,5 @@
+[200~# Ignore log files
+logs/
+
+# Ignore symbolic links 
+*.latest~
