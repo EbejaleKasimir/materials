@@ -3,6 +3,30 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
+try:
+    from airflow import DAG
+except ImportError:
+    print("The DAG class is not defined in the airflow module.")
+    
+
+default_args = {
+    'owner': 'ebejale',
+    'depends_on_past': False,
+    'start_date': datetime(2022, 1, 1),
+    'email': ['kasimir.Ikuenobe@hotmail.com'],
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+dag = DAG(
+    'data_engineer_jobs_dag_v2',
+    default_args=default_args,
+    description='A simple tutorial DAG',
+    schedule_interval=timedelta(days=1),
+)
+
 # Variables declaration
 API_KEY = "58ee1ddf863f2d700a6eea8c9d8ccb12"
 API_ID = "a432e053"

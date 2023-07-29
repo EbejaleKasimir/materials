@@ -5,9 +5,14 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 def create_table():
+    # db connection and load logic
     # Connect to PostgreSQL
-    conn = psycopg2.connect(host='host.docker.internal', dbname='airflow', user='postgres', password='airflow')
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    conn = psycopg2.connect(host='host.docker.internal', 
+                            dbname='airflow_svr', 
+                            user='airflow', 
+                            password='airflow', 
+                            port='5436')
+
     cursor = conn.cursor()
 
     # Define the table
@@ -40,7 +45,11 @@ if __name__ == "__main__":
 def load_to_postgres(df):
     # db connection and load logic
     # Connect to PostgreSQL
-    conn = psycopg2.connect(host='host.docker.internal', dbname='airflow', user='postgres', password='airflow')
+    conn = psycopg2.connect(host='host.docker.internal', 
+                            dbname='airflow_svr', 
+                            user='airflow', 
+                            password='airflow', 
+                            port='5436')
 
     cursor = conn.cursor()
 
@@ -55,4 +64,3 @@ def load_to_postgres(df):
     conn.commit()
     cursor.close()
     conn.close()
-

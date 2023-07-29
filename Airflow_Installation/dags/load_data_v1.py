@@ -24,7 +24,7 @@ default_args = {
 }
 
 dag = DAG(
-    'data_engineer_jobs_dag',
+    'data_engineer_jobs_dag_v1',
     default_args=default_args,
     description='A simple tutorial DAG',
     schedule_interval=timedelta(days=1),
