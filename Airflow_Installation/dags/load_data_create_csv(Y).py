@@ -35,11 +35,27 @@ def get_jobs(location, keyword, **context):
         raise Exception(f"API request failed with status {response.status_code}")
 
 # Define the function to write to CSV
+	
+
+import os
+
+import logging
+
 def write_to_csv(**context):
     jobs = context['ti'].xcom_pull(key='jobs', task_ids='get_jobs')
     df = pd.DataFrame(jobs)
-    df.to_csv('jobs.csv', index=False)
-	
+    file_name = f'Job_Search_{datetime.today().strftime("%Y-%m-%d")}.csv'
+    logging.info(f'Writing to file: {file_name}')
+    file_path = os.path.join(os.path.dirname(dag.fileloc), file_name) 
+    df.to_csv(file_path)
+    # df.to_csv(file_name, index=False)
+
+
+
+
+
+
+
 def write_to_postgres(**context):
     hook = PostgresHook(postgres_conn_id='my_connection')
     jobs = context['ti'].xcom_pull(key='jobs', task_ids='get_jobs')
@@ -124,6 +140,7 @@ write_to_csv_task = PythonOperator(
     dag=dag,
 )
 
+
 write_to_postgres_task = PythonOperator(
     task_id='write_to_postgres',
     python_callable=write_to_postgres,
@@ -139,4 +156,6 @@ write_to_file_task = PythonOperator(
 )
 
 # Define task dependencies
+get_jobs_task >> write_to_csv_task
+
 get_jobs_task >> write_to_csv_task >> write_to_postgres_task >> write_to_file_task
